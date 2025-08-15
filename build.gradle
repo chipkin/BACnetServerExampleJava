@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.chipkin'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JNA for native library access
+    implementation 'net.java.dev.jna:jna:5.13.0'
+    
+    // JUnit 5 for testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+}
+
+application {
+    mainClass = 'com.chipkin.bacnet.SimpleServerExample'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Task to run tests
+task runTests(type: Test) {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+// Custom task to build and test
+task buildAndTest {
+    dependsOn build, test
+    description = 'Build the project and run all tests'
+}
+
+// Task to run the simple example
+task runExample(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.chipkin.bacnet.SimpleServerExample'
+    description = 'Run the simple BACnet server example'
+}
